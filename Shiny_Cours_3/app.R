@@ -9,43 +9,40 @@
 
 library(shiny)
 
+##################################################
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
+  
+  sidebarLayout(
+    
+    sidebarPanel(
+      "Voici la barre laterale ou se trouve les inputs",
+      
+      # On peut permettre a l'utilisateur de saisir des donnees
+      numericInput("age", "Quel est votre age?", value = 11, min = 1, step = 1)
+    ),
+    
+    mainPanel(
+      "Voici le panneau principal ou on affiche les sorties",
+      tableOutput("iris_data")
+      
     )
+    
+  )
+  
 )
 
+##################################################
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
+  
+  # Autorisons une reponse depuis le server pour afficher les donnees dans le pannel principal
+  output$iris_data <- renderTable({
+    iris
+  })
 }
 
+
+######################
 # Run the application 
 shinyApp(ui = ui, server = server)
