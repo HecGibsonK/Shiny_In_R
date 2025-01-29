@@ -9,6 +9,8 @@
 
 library(shiny)
 library(DT)
+library(psych)
+iris$Species <-  NULL  # Pour ne pas afficher la colonne non numeric
 
 ##################################################
 # Define UI for application that draws a histogram
@@ -17,17 +19,19 @@ ui <- fluidPage(
   sidebarLayout(
     
     sidebarPanel(
-      "Voici la barre laterale ou se trouve les inputs",
       
-      # On peut permettre a l'utilisateur de saisir des donnees
-      numericInput("age", "Quel est votre age?", value = 11, min = 1, step = 1)
+      h3("Voici la barre laterale ou se trouve les inputs"),
+      selectInput("Vars", "Choisissez une variable :", choices = names(iris))
     ),
     
     mainPanel(
-      h1("Voici le panneau principal ou on affiche les sorties"),
+      
+      h3("Voici le panneau principal ou on affiche les sorties"),
       tabsetPanel(
-        tabPanel("age", textOutput("age_sortie")),
-        tabPanel("Data", DTOutput("iris_data"))
+        tabPanel("Data", DTOutput("iris_data")),
+        tabPanel("Resume", verbatimTextOutput("Summary")),
+        tabPanel("Stat_Desc", verbatimTextOutput("Describe")),
+        tabPanel("Plot", plotOutput("Hist"))
       )
       
     )
@@ -39,16 +43,28 @@ ui <- fluidPage(
 ##################################################
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  
-  output$age_sortie <- renderText({
-    paste("Vous avez", input$age, "ans")
-  })
-  
+
   # Autorisons une reponse depuis le server pour afficher les donnees dans le pannel principal
   # Utilisons renderDT a la place rendertable pour un tableau interactif
   output$iris_data <- renderDT({
     iris
   })
+  
+  # Resume statistique
+  output$Summary <- renderPrint({
+    summary(iris)
+  })
+  
+  # Statistique descriptive
+  output$Describe <- renderPrint({
+    describe(iris)
+  })
+  
+  # Histogramme
+  output$Hist <- renderPlot({
+    hist(iris[, input$Vars], main = "Histogramme", xlab = input$Vars)
+  })
+  
 }
 
 
