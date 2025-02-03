@@ -1,0 +1,13 @@
+name: My_Iris_App
+title: My_Iris_App
+username: hecgibs
+account: hecgibs
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13885869
+bundleId: 9740671
+url: https://hecgibs.shinyapps.io/My_Iris_App/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Etapes.R
